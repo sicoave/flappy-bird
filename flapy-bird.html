@@ -1,57 +1,65 @@
-<p>***** canvas = document.getElementById(&quot;gameCanvas&quot;);const ctx = canvas.getContext(&quot;2d&quot;);</p>
-<p>// Game variablesconst bird = { x: 50, y: 150, width: 30, height: 30, gravity: 0.6, lift: -10, velocity: 0 };const pipes = [];const pipeWidth = 50;const pipeGap = 100;const pipeSpeed = 2;let score = 0;let gameRunning = true;</p>
-<p>// Controlsdocument.addEventListener(&quot;keydown&quot;, () =&gt; { if (gameRunning) bird.velocity = bird.lift; });</p>
-<p>// Game loopfunction update() {if (!gameRunning) return;</p>
-<pre><code>bird.velocity += bird.gravity;
+const canvas = document.getElementById("gameCanvas"); const ctx = canvas.getContext("2d");
+
+// Game variables const bird = { x: 50, y: 150, width: 30, height: 30, gravity: 0.6, lift: -10, velocity: 0 }; const pipes = []; const pipeWidth = 50; const pipeGap = 100; const pipeSpeed = 2; let score = 0; let gameRunning = true;
+
+// Controls document.addEventListener("keydown", () => { if (gameRunning) bird.velocity = bird.lift; });
+
+// Game loop function update() { if (!gameRunning) return;
+
+bird.velocity += bird.gravity;
 bird.y += bird.velocity;
 
 // Generate pipes
-if (pipes.length === 0 || pipes[pipes.length - 1].x &lt; canvas.width - 200) {
+if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
     let pipeHeight = Math.random() * (canvas.height - pipeGap - 20) + 10;
     pipes.push({ x: canvas.width, y: pipeHeight });
 }
 
 // Move pipes
-for (let i = 0; i &lt; pipes.length; i++) {
+for (let i = 0; i < pipes.length; i++) {
     pipes[i].x -= pipeSpeed;
     
     // Collision detection
-    if (bird.x &lt; pipes[i].x + pipeWidth &amp;&amp; bird.x + bird.width &gt; pipes[i].x &amp;&amp;
-        (bird.y &lt; pipes[i].y || bird.y + bird.height &gt; pipes[i].y + pipeGap)) {
+    if (bird.x < pipes[i].x + pipeWidth && bird.x + bird.width > pipes[i].x &&
+        (bird.y < pipes[i].y || bird.y + bird.height > pipes[i].y + pipeGap)) {
         gameRunning = false;
     }
 }
 
 // Remove off-screen pipes
-if (pipes.length &amp;&amp; pipes[0].x + pipeWidth &lt; 0) {
+if (pipes.length && pipes[0].x + pipeWidth < 0) {
     pipes.shift();
     score++;
 }
 
 // Ground collision
-if (bird.y + bird.height &gt; canvas.height || bird.y &lt; 0) {
+if (bird.y + bird.height > canvas.height || bird.y < 0) {
     gameRunning = false;
 }
-</code></pre>
-<p>}</p>
-<p>function draw() {ctx.clearRect(0, 0, canvas.width, canvas.height);</p>
-<pre><code>// Draw bird
-ctx.fillStyle = &quot;yellow&quot;;
+
+}
+
+function draw() { ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+// Draw bird
+ctx.fillStyle = "yellow";
 ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
 
 // Draw pipes
-ctx.fillStyle = &quot;green&quot;;
+ctx.fillStyle = "green";
 for (let pipe of pipes) {
     ctx.fillRect(pipe.x, 0, pipeWidth, pipe.y);
     ctx.fillRect(pipe.x, pipe.y + pipeGap, pipeWidth, canvas.height - pipe.y - pipeGap);
 }
 
 // Draw score
-ctx.fillStyle = &quot;black&quot;;
-ctx.font = &quot;20px Arial&quot;;
-ctx.fillText(&quot;Score: &quot; + score, 10, 20);
-</code></pre>
-<p>}</p>
-<p>function loop() {update();draw();if (gameRunning) requestAnimationFrame(loop);else alert(&quot;Game Over! Score: &quot; + score);}</p>
-<p>loop();</p>
-<div style="color: red">Word to HTML trial - please <a href="https://wordtohtml.net/site/payment">Go PRO</a> to get whole HTML.</div>
+ctx.fillStyle = "black";
+ctx.font = "20px Arial";
+ctx.fillText("Score: " + score, 10, 20);
+
+}
+
+function loop() { update(); draw(); if (gameRunning) requestAnimationFrame(loop); else alert("Game Over! Score: " + score); }
+
+loop();
+
